@@ -271,6 +271,21 @@ const NAMES = {
 // ---------- STATE ----------
 let nick='', round=1, sel=new Set(), r1=null, r2=null;
 
+// ---------- LIVE BOARD (fire-and-forget; game works fine without it) ----------
+const SB_URL='https://bebftrhxntrshphfrayj.supabase.co';
+const SB_KEY='sb_publishable_YcxcD_ZDqkC4UIu2k-UXOw_EgMkADy3';
+const SESSION=(new URLSearchParams(location.search).get('s')||'seminar').slice(0,24);
+function submitScore(r,roundNo){
+  try{
+    fetch(SB_URL+'/rest/v1/salata_results',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({session:SESSION,nick:nick.slice(0,24),round:roundNo,
+        km:Math.round(r.km),water:Math.round(r.w),co2:Math.round(r.c),
+        sus:r.S,appeal:r.A,smart:r.smart,salad_name:r.name.n})
+    }).catch(function(){});
+  }catch(e){}
+}
+
 function startGame(){
   nick=document.getElementById('nick').value.trim();
   if(!nick){document.getElementById('err-intro').textContent='Γράψε ένα όνομα για να ξεκινήσεις.';return;}
@@ -364,6 +379,7 @@ function submitSalad(){
   if(err){document.getElementById('err-build').textContent=err;return;}
   const picked=[...sel].map(id=>ING.find(i=>i.id===id));
   const r=score(picked); r.name=saladName(r);
+  submitScore(r,round);
   if(round===1){r1=r; showReveal(r);}else{r2=r; showFinal();}
 }
 function statRow(lbl,val,pct){

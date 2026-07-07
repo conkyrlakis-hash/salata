@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Beyond Hospitality — Πίνακας Αποτελεσμάτων</title>
+<style>
+  :root{
+    --paper:#FAF6EB; --card:#FFFFFF; --tint:#EFF5E2; --ink:#22402C; --muted:#6E7D6B;
+    --green:#2E7D4F; --leaf:#68A63F; --kraft:#C4893C; --red:#D96C5F; --line:#DFE3CC;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--paper);color:var(--ink);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+  .wrap{max-width:1160px;margin:0 auto;padding:28px 24px 60px}
+  .top{display:flex;align-items:center;gap:24px;margin-bottom:24px}
+  .top .tt{flex:1}
+  .brand{letter-spacing:.35em;font-size:12px;color:var(--kraft);text-transform:uppercase;margin-bottom:4px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-size:38px;line-height:1.15}
+  .sub{color:var(--muted);font-size:16px;margin-top:4px}
+  .live{display:inline-flex;align-items:center;gap:8px;font-size:14px;color:var(--green);font-weight:600}
+  .live .dot{width:10px;height:10px;border-radius:50%;background:var(--leaf);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .qrbox{text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .qrbox img{width:120px;display:block}
+  .qrbox div{font-size:12px;color:var(--muted);margin-top:6px}
+  .metrics{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:18px}
+  .met{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 12px;text-align:center}
+  .met .v{font-size:40px;font-weight:700;font-family:Georgia,serif;color:var(--green)}
+  .met .l{font-size:12px;color:var(--muted);margin-top:6px;text-transform:uppercase;letter-spacing:.06em}
+  .banner{background:var(--tint);border:1.5px solid var(--leaf);border-radius:14px;padding:20px;text-align:center;margin-bottom:18px}
+  .banner .d{font-size:34px;font-family:Georgia,serif;color:var(--green);font-weight:700}
+  .banner p{color:var(--muted);font-size:15px;margin-top:4px}
+  .cols{display:grid;grid-template-columns:3fr 2fr;gap:18px}
+  .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .panel h2{font-family:Georgia,serif;font-size:22px;color:var(--green);margin-bottom:14px;border-bottom:1px solid var(--line);padding-bottom:8px}
+  .lb-row{display:flex;align-items:center;gap:12px;padding:9px 6px;border-bottom:1px dashed var(--line);font-size:19px}
+  .lb-row:last-child{border:none}
+  .lb-row .rank{width:34px;font-family:Georgia,serif;font-weight:700;color:var(--kraft);font-size:21px}
+  .lb-row:nth-child(2) .rank{color:var(--green)}
+  .lb-row .nm{flex:1;font-weight:600}
+  .lb-row .sal{color:var(--muted);font-size:14px}
+  .lb-row .sc{font-family:Georgia,serif;font-weight:700;font-size:23px;color:var(--green);min-width:52px;text-align:right}
+  .dist-row{display:flex;justify-content:space-between;padding:7px 4px;font-size:15px;border-bottom:1px dashed var(--line)}
+  .dist-row:last-child{border:none}
+  .dist-row b{color:var(--green)}
+  .sup{background:var(--tint);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:14.5px;line-height:1.5}
+  .sup b{color:var(--green)}
+  .notice{background:var(--card);border:1.5px solid var(--kraft);border-radius:14px;padding:24px;text-align:center;font-size:16px;color:var(--muted);margin-bottom:18px}
+  .foot{text-align:center;font-size:12px;color:#9AA28F;margin-top:26px}
+  .empty{color:var(--muted);font-size:15px;text-align:center;padding:18px 0}
+  @media(max-width:820px){.metrics{grid-template-columns:repeat(2,1fr)}.cols{grid-template-columns:1fr}.qrbox{display:none}h1{font-size:28px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="tt">
+      <div class="brand">Beyond Hospitality</div>
+      <h1>Πίνακας Αποτελεσμάτων</h1>
+      <div class="sub">Φτιάξε τη Σαλάτα σου · Ιούλιος, Κύπρος &nbsp; <span class="live"><span class="dot"></span>LIVE</span></div>
+    </div>
+    <div class="qrbox"><img src="img/qr.png" alt="QR για το παιχνίδι"><div>Σκάναρε &amp; παίξε</div></div>
+  </div>
+
+  <div id="notice" class="notice" style="display:none"></div>
+
+  <div class="metrics">
+    <div class="met"><div class="v" id="m-players">0</div><div class="l">Παίκτες</div></div>
+    <div class="met"><div class="v" id="m-avg">–</div><div class="l">Μέσο Smart Score</div></div>
+    <div class="met"><div class="v" id="m-km">0</div><div class="l">Χιλιόμετρα (Γύρος 1)</div></div>
+    <div class="met"><div class="v" id="m-water">0</div><div class="l">Λίτρα νερό (Γύρος 1)</div></div>
+    <div class="met"><div class="v" id="m-co2">0</div><div class="l">γρ. CO₂ (Γύρος 1)</div></div>
+  </div>
+
+  <div class="banner" id="banner" style="display:none">
+    <div class="d" id="b-pct"></div>
+    <p id="b-text"></p>
+  </div>
+
+  <div class="cols">
+    <div class="panel">
+      <h2>Κατάταξη</h2>
+      <div id="leaderboard"><div class="empty">Περιμένουμε τους πρώτους παίκτες…</div></div>
+    </div>
+    <div class="panel">
+      <h2>Οι σαλάτες της αίθουσας</h2>
+      <div id="dist"><div class="empty">–</div></div>
+      <div id="sups"></div>
+    </div>
+  </div>
+
+  <div class="foot" id="foot"></div>
+</div>
+
+<script>
+const SB_URL='https://bebftrhxntrshphfrayj.supabase.co';
+const SB_KEY='sb_publishable_YcxcD_ZDqkC4UIu2k-UXOw_EgMkADy3';
+const SESSION=(new URLSearchParams(location.search).get('s')||'seminar').slice(0,24);
+document.getElementById('foot').textContent='Session: '+SESSION+' · ανανέωση κάθε 4"';
+function fmt(n){return Math.round(n).toLocaleString('el-GR');}
+
+async function load(){
+  let rows;
+  try{
+    const res=await fetch(SB_URL+'/rest/v1/salata_results?select=nick,round,km,water,co2,smart,salad_name,created_at&session=eq.'+encodeURIComponent(SESSION)+'&order=created_at.asc&limit=1000',
+      {headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY}});
+    if(!res.ok){
+      document.getElementById('notice').style.display='block';
+      document.getElementById('notice').textContent='Ο πίνακας δεν είναι ενεργός ακόμη — η βάση (salata_results) δεν έχει δημιουργηθεί στο Supabase.';
+      return;
+    }
+    document.getElementById('notice').style.display='none';
+    rows=await res.json();
+  }catch(e){return;}
+
+  const players={};
+  rows.forEach(r=>{
+    const p=players[r.nick]=players[r.nick]||{};
+    if(r.round===1)p.r1=r; else p.r2=r;
+  });
+  const nicks=Object.keys(players);
+  document.getElementById('m-players').textContent=nicks.length;
+  if(!nicks.length)return;
+
+  let km=0,water=0,co2=0;
+  nicks.forEach(n=>{const r=players[n].r1; if(r){km+=r.km;water+=r.water;co2+=r.co2;}});
+  document.getElementById('m-km').textContent=fmt(km);
+  document.getElementById('m-water').textContent=fmt(water);
+  document.getElementById('m-co2').textContent=fmt(co2);
+
+  const best=nicks.map(n=>{const p=players[n];const r=p.r2||p.r1;return {nick:n,...r};})
+    .sort((a,b)=>b.smart-a.smart);
+  document.getElementById('m-avg').textContent=Math.round(best.reduce((s,r)=>s+r.smart,0)/best.length);
+
+  document.getElementById('leaderboard').innerHTML=best.slice(0,10).map((r,i)=>
+    '<div class="lb-row"><span class="rank">'+(i+1)+'</span><span class="nm">'+esc(r.nick)+
+    '<div class="sal">'+esc(r.salad_name||'')+'</div></span><span class="sc">'+r.smart+'</span></div>'
+  ).join('');
+
+  const dist={};
+  best.forEach(r=>{const k=r.salad_name||'—';dist[k]=(dist[k]||0)+1;});
+  document.getElementById('dist').innerHTML=Object.entries(dist).sort((a,b)=>b[1]-a[1])
+    .map(([k,v])=>'<div class="dist-row"><span>'+esc(k)+'</span><b>'+v+'</b></div>').join('');
+
+  const sups=[];
+  const r1s=nicks.map(n=>players[n].r1).filter(Boolean);
+  if(r1s.length){
+    const jet=r1s.reduce((a,b)=>b.km>a.km?b:a);
+    if(jet.km>2000)sups.push('<div class="sup">Σαλάτα Τζετ-Σετ: <b>'+esc(jet.nick)+'</b> — '+fmt(jet.km)+' χλμ</div>');
+    const thirst=r1s.reduce((a,b)=>b.water>a.water?b:a);
+    if(thirst.water>200)sups.push('<div class="sup">Ο Στραγγιστής του Κούρη: <b>'+esc(thirst.nick)+'</b> — '+fmt(thirst.water)+' λίτρα</div>');
+  }
+  const pairs=nicks.map(n=>players[n]).filter(p=>p.r1&&p.r2&&p.r1.co2>0);
+  if(pairs.length){
+    const c1=pairs.reduce((s,p)=>s+p.r1.co2,0), c2=pairs.reduce((s,p)=>s+p.r2.co2,0);
+    const k1=pairs.reduce((s,p)=>s+p.r1.km,0), k2=pairs.reduce((s,p)=>s+p.r2.km,0);
+    if(c1>c2){
+      document.getElementById('banner').style.display='block';
+      document.getElementById('b-pct').textContent='−'+Math.round(100*(c1-c2)/c1)+'% CO₂ στον Γύρο 2';
+      document.getElementById('b-text').textContent='Η αίθουσα μείωσε '+fmt(k1-k2)+' χιλιόμετρα με τις ίδιες σαλάτες — με γνώση, όχι στέρηση.';
+    }
+    const imp=pairs.map(p=>({nick:p.r1.nick,pct:Math.round(100*(p.r1.co2-p.r2.co2)/p.r1.co2)})).sort((a,b)=>b.pct-a.pct)[0];
+    if(imp&&imp.pct>0)sups.push('<div class="sup">Μεγαλύτερη βελτίωση: <b>'+esc(imp.nick)+'</b> — −'+imp.pct+'% CO₂</div>');
+  }
+  document.getElementById('sups').innerHTML=sups.join('');
+}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+load();
+setInterval(load,4000);
+</script>
+</body>
+</html>
