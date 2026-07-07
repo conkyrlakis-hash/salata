@@ -22,6 +22,7 @@
   @keyframes pulse{0%,100%{opacity:1}50%{opacity:.35}}
   .rbtn{margin-left:14px;padding:7px 16px;border:1px solid var(--green);border-radius:9px;background:transparent;color:var(--green);font-size:14px;font-weight:600;cursor:pointer;font-family:inherit}
   .rbtn:active{transform:scale(.97)}
+  .dbtn{border-color:var(--red);color:var(--red)}
   .qrbox{text-align:center;background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
   .qrbox img{width:120px;display:block}
   .qrbox div{font-size:12px;color:var(--muted);margin-top:6px}
@@ -61,6 +62,7 @@
       <h1>Πίνακας Αποτελεσμάτων</h1>
       <div class="sub">Φτιάξε τη Σαλάτα σου · Ιούλιος, Κύπρος &nbsp; <span class="live"><span class="dot"></span>LIVE</span>
         <button class="rbtn" onclick="location.reload()">⟳ Ανανέωση</button>
+        <button class="rbtn dbtn" onclick="resetBoard()">✕ Μηδενισμός</button>
         <span id="upd" style="font-size:12px;color:#9AA28F;margin-left:10px"></span></div>
     </div>
     <div class="qrbox"><img src="img/qr.png" alt="QR για το παιχνίδι"><div>Σκάναρε &amp; παίξε</div></div>
@@ -118,6 +120,10 @@ async function load(){
     document.getElementById('upd').textContent='ενημερώθηκε '+new Date().toLocaleTimeString('el-GR');
   }catch(e){return;}
 
+  let cut=-1;
+  rows.forEach((r,i)=>{if(r.nick==='__reset__')cut=i;});
+  rows=rows.slice(cut+1).filter(r=>r.nick!=='__reset__');
+
   const players={};
   rows.forEach(r=>{
     const p=players[r.nick]=players[r.nick]||{};
@@ -170,6 +176,21 @@ async function load(){
   document.getElementById('sups').innerHTML=sups.join('');
 }
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+async function resetBoard(){
+  if(!confirm('Να μηδενιστεί ο πίνακας; Τα προηγούμενα αποτελέσματα θα εξαφανιστούν για όλους.'))return;
+  try{
+    await fetch(SB_URL+'/rest/v1/salata_results',{method:'POST',
+      headers:{'apikey':SB_KEY,'Authorization':'Bearer '+SB_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+      body:JSON.stringify({session:SESSION,nick:'__reset__',round:1,km:0,water:0,co2:0,sus:0,appeal:0,smart:0,salad_name:'reset'})});
+  }catch(e){}
+  document.getElementById('banner').style.display='none';
+  document.getElementById('leaderboard').innerHTML='<div class="empty">Περιμένουμε τους πρώτους παίκτες…</div>';
+  document.getElementById('dist').innerHTML='<div class="empty">–</div>';
+  document.getElementById('sups').innerHTML='';
+  ['m-km','m-water','m-co2','m-players'].forEach(id=>document.getElementById(id).textContent='0');
+  document.getElementById('m-avg').textContent='–';
+  load();
+}
 load();
 setInterval(load,4000);
 </script>
