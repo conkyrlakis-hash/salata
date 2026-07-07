@@ -16,7 +16,8 @@
   h1{font-family:Georgia,'Times New Roman',serif;font-size:30px;text-align:center;line-height:1.2;margin-bottom:10px;color:var(--ink)}
   h1 .dot{color:var(--leaf)}
   .sub{text-align:center;color:var(--muted);font-size:15px;margin-bottom:28px;line-height:1.5}
-  .hero{display:block;margin:6px auto 14px;width:150px}
+  #s-intro{position:relative;z-index:0}
+  .intro-bg{position:absolute;top:24px;left:50%;transform:translateX(-50%);width:340px;max-width:88%;opacity:.30;z-index:-1;pointer-events:none}
   .deco{display:block;margin:0 auto 10px;height:76px;width:auto}
   .panel{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:16px}
   label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
@@ -86,8 +87,8 @@
 
   <!-- INTRO -->
   <div id="s-intro">
+    <img class="intro-bg" src="img/bag-bg.webp" alt="">
     <div class="brand">Beyond Hospitality</div>
-    <img class="hero" src="img/bag.webp" alt="">
     <h1>Φτιάξε τη Σαλάτα σου<span class="dot">.</span></h1>
     <div class="sub">Πόσο βιώσιμη είναι η τέλεια σαλάτα σου;<br>Ιούλιος · Κύπρος</div>
     <div class="panel">
@@ -140,8 +141,7 @@ const ING = [
  // ΒΑΣΗ
  {id:'glistrida',cat:'base',nm:'Γλιστρίδα',org:'Κύπρος · εποχής',km:20,w:4,c:15,a:3,s:'in'},
  {id:'vlita',cat:'base',nm:'Βλίτα',org:'Κύπρος · εποχής',km:25,w:8,c:18,a:3,s:'in'},
- {id:'iceberg',cat:'base',nm:'Μαρούλι παγόβουνο',org:'Κύπρος · εκτός εποχής',km:30,w:18,c:30,a:3,s:'off'},
- {id:'lollo',cat:'base',nm:'Μαρούλι λόλα',org:'Κύπρος · εκτός εποχής',km:30,w:15,c:28,a:3,s:'off'},
+ {id:'iceberg',cat:'base',nm:'Μαρούλι πράσινο',org:'Κύπρος · εκτός εποχής',km:30,w:16,c:29,a:3,s:'off'},
  {id:'roka',cat:'base',nm:'Ρόκα',org:'Κύπρος · θερμοκήπιο',km:30,w:14,c:32,a:4,s:'off'},
  {id:'spanaki',cat:'base',nm:'Σπανάχι',org:'Ολλανδία',km:3200,w:12,c:48,a:3,s:'off'},
  {id:'babyleaves',cat:'base',nm:'Baby leaves μείγμα',org:'Ιταλία · συσκευασμένο',km:2400,w:13,c:55,a:4,s:'off'},
@@ -191,7 +191,6 @@ const META = {
  glistrida:{t:'good',w:'Το πράσινο του Ιουλίου — ευδοκιμεί στη ζέστη με σταγόνες νερό.'},
  vlita:{t:'good',w:'Καλοκαιρινή κυπριακή σοδειά.'},
  iceberg:{t:'bad',w:'Φυτό του χειμώνα· τον Ιούλιο μεγαλώνει μόνο με έξτρα πότισμα.'},
- lollo:{t:'bad',w:'Εκτός εποχής — θέλει γενναία άρδευση μες στον καύσωνα.'},
  roka:{t:'bad',w:'Τον Ιούλιο μόνο θερμοκηπίου.'},
  spanaki:{t:'bad',w:'Χειμωνιάτικο φυλλώδες — καλοκαίρι σημαίνει εισαγωγή από τη Βόρεια Ευρώπη.'},
  babyleaves:{t:'bad',w:'Συσκευασμένα στην Ιταλία, ταξιδεύουν με ψυκτική αλυσίδα.'},
@@ -239,7 +238,6 @@ const INSIGHTS = [
  {id:'balsamiko',neg:1,t:'Το βαλσάμικο διέσχισε δύο θάλασσες για να έρθει από τη Μόντενα. Το χαρουπόμελο κάνει την ίδια δουλειά από 30 χλμ.'},
  {id:'halloumi',neg:1,t:'Τοπικό δεν σημαίνει πάντα βιώσιμο: το χαλλούμι έχει το μεγαλύτερο αποτύπωμα του πιάτου σου. Η αναρή — υποπροϊόν του — έχει το 1/3.'},
  {id:'iceberg',neg:1,t:'Μαρούλι τον Ιούλιο στην Κύπρο = καλλιέργεια εκτός εποχής με έξτρα πότισμα. Η γλιστρίδα ευδοκιμεί στον καύσωνα σχεδόν χωρίς νερό.'},
- {id:'lollo',neg:1,t:'Τα μαρούλια είναι φυτά του χειμώνα — τον Ιούλιο θέλουν πολύ έξτρα νερό. Δοκίμασε γλιστρίδα ή βλίτα.'},
  {id:'kinoa',neg:1,t:'Η κινόα ήρθε από 12.000 χλμ. Το λουβί είναι ο τοπικός ήρωας πρωτεΐνης — καλοκαιρινή σοδειά Κύπρου.'},
  {id:'rodi',neg:1,t:'Το κυπριακό ρόδι έρχεται τέλη Αυγούστου. Αυτό εδώ ταξίδεψε ή έμεινε μήνες στο ψυγείο.'},
  {id:'spanaki',neg:1,t:'Το σπανάχι είναι χειμωνιάτικο — τον Ιούλιο έρχεται από τη Βόρεια Ευρώπη.'},
