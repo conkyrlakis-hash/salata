@@ -30,7 +30,7 @@
   .cat{margin:26px 0 10px;font-family:Georgia,serif;font-size:19px;color:var(--gold-soft);border-bottom:1px solid #24425F;padding-bottom:6px}
   .cat small{font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
   .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .ing{background:var(--card);border:1.5px solid #24425F;border-radius:12px;padding:12px;cursor:pointer;user-select:none;position:relative;min-height:64px}
+  .ing{background:var(--card);border:1.5px solid #24425F;border-radius:12px;padding:14px 12px;cursor:pointer;user-select:none;position:relative;min-height:48px;display:flex;align-items:center}
   .ing.sel{border-color:var(--gold);background:var(--card2)}
   .ing.sel::after{content:"✓";position:absolute;top:8px;right:10px;color:var(--gold);font-weight:700}
   .ing .nm{font-size:15px;font-weight:600;line-height:1.25;padding-right:16px}
@@ -300,7 +300,7 @@ function renderMarket(){
     ING.filter(i=>i.cat===c.id).forEach(i=>{
       const d=document.createElement('div');
       d.className='ing'+(sel.has(i.id)?' sel':''); d.id='card-'+i.id;
-      d.innerHTML='<div class="nm">'+i.nm+'</div><div class="org">'+i.org+'</div><div class="hats">'+stars(i.a)+'</div>';
+      d.innerHTML='<div class="nm">'+i.nm+'</div>';
       d.onclick=()=>toggle(i);
       g.appendChild(d);
     });
@@ -381,7 +381,6 @@ function pickInsights(picked){
   if(pos.length) out.push('<div class="insight good">'+pos[0].t+'</div>');
   return out.join('');
 }
-function stars(a){return '★'.repeat(a)+'<span style="opacity:.25">'+'★'.repeat(5-a)+'</span>';}
 function ingList(picked){
   const ord={bad:0,mid:1,good:2};
   const sorted=[...picked].sort((x,y)=>ord[x.tier]-ord[y.tier]);
@@ -389,8 +388,8 @@ function ingList(picked){
     sorted.map(i=>{
       const cls=i.tier==='good'?'g':(i.tier==='bad'?'b':'m');
       return '<div class="ib '+cls+'">'+
-        '<div class="ibt"><span>'+i.nm+'</span><span class="st">'+stars(i.a)+'</span></div>'+
-        '<div class="ibo">'+i.org+' · '+fmt(i.km)+' χλμ · '+i.w+' L νερό · '+i.c+' γρ. CO₂</div>'+
+        '<div class="ibt"><span>'+i.nm+'</span></div>'+
+        '<div class="ibo">'+fmt(i.km)+' χλμ · '+i.w+' L νερό · '+i.c+' γρ. CO₂</div>'+
         '<div class="ibw">'+i.why+'</div></div>';
     }).join('')+'<div style="height:14px"></div>';
 }
