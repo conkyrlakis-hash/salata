@@ -60,6 +60,15 @@
   .insight.good{border-left-color:var(--green)}
   .items{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
   .items span{display:inline-block;background:#0E2334;border-radius:20px;padding:4px 12px;margin:3px 2px}
+  /* ingredient breakdown */
+  .ib{background:var(--card);border:1px solid #24425F;border-left:4px solid #24425F;border-radius:10px;padding:10px 12px;margin-bottom:8px}
+  .ib.g{border-left-color:var(--green)}
+  .ib.b{border-left-color:var(--red)}
+  .ib.m{border-left-color:var(--gold)}
+  .ibt{display:flex;justify-content:space-between;align-items:baseline;font-size:14.5px;font-weight:600;gap:8px}
+  .ibt .st{color:var(--gold-soft);font-size:11px;letter-spacing:1px;white-space:nowrap}
+  .ibo{font-size:12px;color:var(--muted);margin-top:3px}
+  .ibw{font-size:12.5px;opacity:.85;margin-top:6px;font-style:italic;line-height:1.45}
   /* final */
   .vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
   .vcol{background:var(--card);border:1px solid #24425F;border-radius:12px;padding:14px}
@@ -178,6 +187,53 @@ const ING = [
  {id:'kaisara',cat:'dress',nm:'Σως Καίσαρα',org:'επεξεργασμένη · εισαγωγής',km:2500,w:30,c:90,a:4,s:'pan'}
 ];
 
+// per-ingredient verdict: tier (good/mid/bad) + short "why" for the results breakdown
+const META = {
+ glistrida:{t:'good',w:'Το πράσινο του Ιουλίου — ευδοκιμεί στη ζέστη με σταγόνες νερό.'},
+ vlita:{t:'good',w:'Καλοκαιρινή κυπριακή σοδειά.'},
+ iceberg:{t:'bad',w:'Φυτό του χειμώνα· τον Ιούλιο μεγαλώνει μόνο με έξτρα πότισμα.'},
+ lollo:{t:'bad',w:'Εκτός εποχής — θέλει γενναία άρδευση μες στον καύσωνα.'},
+ roka:{t:'bad',w:'Τον Ιούλιο μόνο θερμοκηπίου.'},
+ spanaki:{t:'bad',w:'Χειμωνιάτικο φυλλώδες — καλοκαίρι σημαίνει εισαγωγή από τη Βόρεια Ευρώπη.'},
+ babyleaves:{t:'bad',w:'Συσκευασμένα στην Ιταλία, ταξιδεύουν με ψυκτική αλυσίδα.'},
+ lahano:{t:'bad',w:'Χειμωνιάτικη καλλιέργεια — αποθηκευμένο εδώ και μήνες.'},
+ ntomata:{t:'good',w:'Full εποχής, ανοιχτό χωράφι — ό,τι καλύτερο έχει ο Ιούλιος.'},
+ aggouri:{t:'good',w:'Εποχής και τοπικό.'},
+ piperia:{t:'good',w:'Εποχής και τοπική.'},
+ kremmidi:{t:'good',w:'Τοπικό, ελάχιστο αποτύπωμα.'},
+ kolokithaki:{t:'good',w:'Εποχής, από κυπριακό χωράφι.'},
+ karpouzi:{t:'good',w:'Peak εποχής — το ελαφρύτερο υλικό του ταμπλό.'},
+ sika:{t:'good',w:'Η σοδειά μόλις ξεκινά — ντόπια και εποχής.'},
+ kalampoki:{t:'mid',w:'Εποχής μεν, διψασμένη καλλιέργεια δε.'},
+ pantzari:{t:'bad',w:'Εκτός εποχής — μήνες σε ψυκτικό θάλαμο.'},
+ avocado:{t:'bad',w:'Το κυπριακό αβοκάντο βγαίνει τον χειμώνα — τον Ιούλιο έρχεται από το Περού.'},
+ rodi:{t:'bad',w:'Το κυπριακό ρόδι έρχεται τέλη Αυγούστου· αυτό ταξίδεψε.'},
+ agkinara:{t:'bad',w:'Επεξεργασμένη και εισαγόμενη από την Ιταλία.'},
+ halloumi:{t:'bad',w:'Τοπικό μεν — αλλά το γαλακτοκομικό αποτύπωμα είναι το βαρύτερο του ταμπλό.'},
+ anari:{t:'good',w:'Υποπροϊόν του χαλλουμιού — ίδια οικογένεια, το 1/3 του αποτυπώματος.'},
+ feta:{t:'bad',w:'Αιγοπρόβειο γαλακτοκομικό, με θαλάσσιο ταξίδι από την Ελλάδα.'},
+ kotopoulo:{t:'mid',w:'Τοπικό, αλλά η ζωική πρωτεΐνη κοστίζει σε νερό.'},
+ avgo:{t:'mid',w:'Τοπική, σχετικά ελαφριά ζωική πρωτεΐνη.'},
+ tonos:{t:'bad',w:'Αλιεία, κονσερβοποίηση και μεγάλο ταξίδι.'},
+ louvi:{t:'good',w:'Καλοκαιρινή σοδειά Κύπρου — η ελαφρύτερη πρωτεΐνη του ταμπλό.'},
+ revithia:{t:'mid',w:'Όσπριο με μικρό αποτύπωμα, απλώς εισαγόμενο.'},
+ elies:{t:'good',w:'Ξηρικά λιόδεντρα — σχεδόν καθόλου άρδευση.'},
+ kapari:{t:'good',w:'Αυτοφυής στο νησί — σχεδόν μηδενικό αποτύπωμα.'},
+ amigdala:{t:'mid',w:'Ντόπια, αλλά από τις πιο διψασμένες καλλιέργειες.'},
+ karidia:{t:'bad',w:'Εισαγόμενα και υδροβόρα.'},
+ kinoa:{t:'bad',w:'Trendy, αλλά ταξιδεύει από τις Άνδεις. Το λουβί είναι ο ντόπιος αντικαταστάτης.'},
+ liasti:{t:'bad',w:'Συνήθως ιταλικής παραγωγής — υπάρχει και κυπριακή.'},
+ krouton:{t:'good',w:'Ψωμί από τον φούρνο της γειτονιάς.'},
+ kolokithosporoi:{t:'bad',w:'Μακρύ ταξίδι για λίγο τραγανό.'},
+ ladolemono:{t:'good',w:'Το κλασικό του τόπου — ελάχιστα χιλιόμετρα.'},
+ haroupomelo:{t:'good',w:'Το «μαύρο χρυσάφι» της Κύπρου — ξηρικά δέντρα, μηδενική άρδευση.'},
+ xidi:{t:'good',w:'Από κυπριακά οινοποιεία.'},
+ balsamiko:{t:'bad',w:'Από τη Μόντενα, μέσω δύο θαλασσών. Το χαρουπόμελο κάνει τη δουλειά από δίπλα.'},
+ giaourti:{t:'mid',w:'Τοπικό, με το μέτριο αποτύπωμα του γαλακτοκομικού.'},
+ kaisara:{t:'bad',w:'Βιομηχανική σως με εισαγόμενα συστατικά.'}
+};
+ING.forEach(i=>{const m=META[i.id]||{t:'mid',w:''}; i.tier=m.t; i.why=m.w;});
+
 // insights: triggered by picked ids (neg = gotcha, pos = hero)
 const INSIGHTS = [
  {id:'avocado',neg:1,t:'Το αβοκάντο σου ταξίδεψε ~11.000 χλμ από το Περού. Η Κύπρος βγάζει δικά της αβοκάντο — τον χειμώνα.'},
@@ -244,7 +300,7 @@ function renderMarket(){
     ING.filter(i=>i.cat===c.id).forEach(i=>{
       const d=document.createElement('div');
       d.className='ing'+(sel.has(i.id)?' sel':''); d.id='card-'+i.id;
-      d.innerHTML='<div class="nm">'+i.nm+'</div><div class="org">'+i.org+'</div><div class="hats">'+'◆'.repeat(i.a)+'<span style="opacity:.25">'+'◆'.repeat(5-i.a)+'</span></div>';
+      d.innerHTML='<div class="nm">'+i.nm+'</div><div class="org">'+i.org+'</div><div class="hats">'+stars(i.a)+'</div>';
       d.onclick=()=>toggle(i);
       g.appendChild(d);
     });
@@ -325,6 +381,19 @@ function pickInsights(picked){
   if(pos.length) out.push('<div class="insight good">'+pos[0].t+'</div>');
   return out.join('');
 }
+function stars(a){return '★'.repeat(a)+'<span style="opacity:.25">'+'★'.repeat(5-a)+'</span>';}
+function ingList(picked){
+  const ord={bad:0,mid:1,good:2};
+  const sorted=[...picked].sort((x,y)=>ord[x.tier]-ord[y.tier]);
+  return '<div class="cat" style="margin-top:22px">Τα υλικά σου <small>και τι κόστισαν</small></div>'+
+    sorted.map(i=>{
+      const cls=i.tier==='good'?'g':(i.tier==='bad'?'b':'m');
+      return '<div class="ib '+cls+'">'+
+        '<div class="ibt"><span>'+i.nm+'</span><span class="st">'+stars(i.a)+'</span></div>'+
+        '<div class="ibo">'+i.org+' · '+fmt(i.km)+' χλμ · '+i.w+' L νερό · '+i.c+' γρ. CO₂</div>'+
+        '<div class="ibw">'+i.why+'</div></div>';
+    }).join('')+'<div style="height:14px"></div>';
+}
 function showReveal(r){
   document.getElementById('s-build').classList.add('hidden');
   document.getElementById('bar').classList.add('hidden');
@@ -346,7 +415,7 @@ function showReveal(r){
    '</div>'+
    '<div class="score"><div class="lbl">Smart Salad Score</div><div class="big">'+r.smart+'</div></div>'+
    pickInsights(r.picked)+
-   '<div class="items">'+r.picked.map(i=>'<span>'+i.nm+'</span>').join('')+'</div>'+
+   ingList(r.picked)+
    '<button class="btn" onclick="startRound2()">Μπορείς καλύτερα; Ξαναφτιάξ᾽ την</button>'+
    '<div style="height:10px"></div>'+
    '<button class="btn ghost" onclick="showFinalSolo()">Μένω με αυτήν</button>';
@@ -387,6 +456,7 @@ function showFinal(solo){
        '<div class="r"><span>Score</span><b>'+r2.smart+'</b></div></div>'+
    '</div>')+
    deltaHtml+
+   ingList(r2.picked)+
    '<div class="showoff">Δείξε την οθόνη σου — ποιος έχει το ψηλότερο score στην αίθουσα;</div>'+
    '<button class="btn ghost" onclick="location.reload()">Παίξε ξανά</button>'+
    '<div class="foot">Beyond Hospitality · Ιούλιος, Κύπρος<br>'+
