@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Beyond Hospitality — Φτιάξε τη Σαλάτα σου</title>
+<style>
+  :root{
+    --navy:#0B1D2E; --card:#132A40; --card2:#1B3550; --gold:#C9A24B; --gold-soft:#E3C685;
+    --text:#F2EDE4; --muted:#9DB0C2; --green:#7FB069; --red:#D96C5F;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:var(--navy);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 120px}
+  .brand{letter-spacing:.35em;font-size:11px;color:var(--gold);text-transform:uppercase;text-align:center;margin-bottom:6px}
+  h1{font-family:Georgia,'Times New Roman',serif;font-size:30px;text-align:center;line-height:1.2;margin-bottom:10px}
+  h1 .dot{color:var(--gold)}
+  .sub{text-align:center;color:var(--muted);font-size:15px;margin-bottom:28px;line-height:1.5}
+  .panel{background:var(--card);border:1px solid #24425F;border-radius:14px;padding:20px;margin-bottom:16px}
+  label{display:block;font-size:13px;color:var(--muted);margin-bottom:8px}
+  input[type=text]{width:100%;padding:14px;border-radius:10px;border:1px solid #2E5170;background:#0E2334;color:var(--text);font-size:17px}
+  input[type=text]:focus{outline:none;border-color:var(--gold)}
+  .btn{display:block;width:100%;padding:16px;border:none;border-radius:12px;background:var(--gold);color:#14263A;
+       font-size:17px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn:active{transform:scale(.98)}
+  .btn.ghost{background:transparent;border:1px solid var(--gold);color:var(--gold)}
+  .btn:disabled{opacity:.4}
+  .rules{font-size:14px;color:var(--muted);line-height:1.7}
+  .rules b{color:var(--text)}
+  .cat{margin:26px 0 10px;font-family:Georgia,serif;font-size:19px;color:var(--gold-soft);border-bottom:1px solid #24425F;padding-bottom:6px}
+  .cat small{font-family:'Segoe UI',sans-serif;font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ing{background:var(--card);border:1.5px solid #24425F;border-radius:12px;padding:12px;cursor:pointer;user-select:none;position:relative;min-height:64px}
+  .ing.sel{border-color:var(--gold);background:var(--card2)}
+  .ing.sel::after{content:"✓";position:absolute;top:8px;right:10px;color:var(--gold);font-weight:700}
+  .ing .nm{font-size:15px;font-weight:600;line-height:1.25;padding-right:16px}
+  .ing .org{font-size:12px;color:var(--muted);margin-top:4px}
+  .ing .hats{font-size:11px;color:var(--gold-soft);margin-top:3px;letter-spacing:1px}
+  .bar{position:fixed;bottom:0;left:0;right:0;background:rgba(11,29,46,.97);border-top:1px solid #24425F;padding:12px 16px;backdrop-filter:blur(4px)}
+  .bar .in{max-width:560px;margin:0 auto;display:flex;gap:12px;align-items:center}
+  .bar .cnt{font-size:14px;color:var(--muted);white-space:nowrap}
+  .bar .cnt b{color:var(--gold);font-size:18px}
+  .err{color:var(--red);font-size:13px;text-align:center;margin-top:8px;min-height:18px}
+  /* reveal */
+  .saladname{font-family:Georgia,serif;font-size:34px;color:var(--gold);text-align:center;line-height:1.15;margin:6px 0 4px}
+  .tagline{text-align:center;color:var(--muted);font-size:14px;font-style:italic;margin-bottom:20px}
+  .stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+  .stat{background:var(--card);border:1px solid #24425F;border-radius:12px;padding:14px 8px;text-align:center}
+  .stat .v{font-size:22px;font-weight:700;font-family:Georgia,serif}
+  .stat .l{font-size:11px;color:var(--muted);margin-top:4px;text-transform:uppercase;letter-spacing:.05em}
+  .score{background:linear-gradient(135deg,#1B3550,#132A40);border:1.5px solid var(--gold);border-radius:14px;padding:20px;text-align:center;margin-bottom:16px}
+  .score .big{font-size:52px;font-family:Georgia,serif;font-weight:700;color:var(--gold)}
+  .score .lbl{font-size:12px;letter-spacing:.25em;color:var(--muted);text-transform:uppercase}
+  .meter{height:8px;background:#0E2334;border-radius:4px;overflow:hidden;margin:8px 0 2px}
+  .meter i{display:block;height:100%;background:var(--gold);border-radius:4px}
+  .mrow{margin-bottom:10px}
+  .mrow .t{display:flex;justify-content:space-between;font-size:13px;color:var(--muted)}
+  .mrow .t b{color:var(--text)}
+  .insight{background:#0E2334;border-left:3px solid var(--gold);border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px;line-height:1.55;margin-bottom:10px}
+  .insight.good{border-left-color:var(--green)}
+  .items{font-size:13px;color:var(--muted);line-height:1.5;margin-bottom:16px}
+  .items span{display:inline-block;background:#0E2334;border-radius:20px;padding:4px 12px;margin:3px 2px}
+  /* final */
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+  .vcol{background:var(--card);border:1px solid #24425F;border-radius:12px;padding:14px}
+  .vcol.win{border-color:var(--green)}
+  .vcol h4{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;text-align:center}
+  .vcol .r{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;border-bottom:1px dashed #24425F}
+  .vcol .r:last-child{border:none}
+  .delta{background:linear-gradient(135deg,#14332A,#132A40);border:1.5px solid var(--green);border-radius:14px;padding:18px;text-align:center;margin-bottom:16px}
+  .delta .d{font-size:30px;font-family:Georgia,serif;color:var(--green);font-weight:700}
+  .delta p{font-size:14px;color:var(--muted);margin-top:6px;line-height:1.5}
+  .foot{font-size:11px;color:#5F7387;text-align:center;line-height:1.6;margin-top:30px}
+  .hidden{display:none}
+  .showoff{text-align:center;font-size:15px;color:var(--gold-soft);margin:14px 0;letter-spacing:.05em}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- INTRO -->
+  <div id="s-intro">
+    <div class="brand">Beyond Hospitality</div>
+    <h1>Φτιάξε τη Σαλάτα σου<span class="dot">.</span></h1>
+    <div class="sub">Πόσο βιώσιμη είναι η τέλεια σαλάτα σου;<br>Ιούλιος · Κύπρος</div>
+    <div class="panel">
+      <label>Το όνομά σου (ή ψευδώνυμο)</label>
+      <input type="text" id="nick" maxlength="20" placeholder="π.χ. Chef Maria" autocomplete="off">
+    </div>
+    <div class="panel rules">
+      Διάλεξε τα υλικά που <b>θα ήθελες πραγματικά να φας</b> — όχι αυτά που «πρέπει».<br><br>
+      <b>5–12 υλικά:</b> τουλάχιστον 1 βάση, 1 λαχανικό, 1 πρωτεΐνη και ακριβώς 1 ντρέσινγκ.<br><br>
+      Στο τέλος θα δεις τι κόστισε η σαλάτα σου στο νησί — σε χιλιόμετρα, νερό και CO₂.
+    </div>
+    <button class="btn" onclick="startGame()">Ξεκίνα</button>
+    <div class="err" id="err-intro"></div>
+  </div>
+
+  <!-- BUILD -->
+  <div id="s-build" class="hidden">
+    <div class="brand">Beyond Hospitality</div>
+    <h1 id="build-title">Η σαλάτα σου</h1>
+    <div class="sub" id="build-sub"></div>
+    <div id="market"></div>
+    <div style="height:20px"></div>
+  </div>
+
+  <!-- REVEAL / FINAL -->
+  <div id="s-result" class="hidden"></div>
+
+</div>
+
+<div class="bar hidden" id="bar">
+  <div class="in">
+    <div class="cnt"><b id="cnt">0</b>/12</div>
+    <button class="btn" id="submit" onclick="submitSalad()">Η σαλάτα μου είναι έτοιμη</button>
+  </div>
+  <div class="err" id="err-build"></div>
+</div>
+
+<script>
+// ---------- DATA (July, Cyprus; per-portion; blue water) ----------
+const CATS = [
+  {id:'base', name:'Βάση', hint:'διάλεξε τουλάχιστον 1'},
+  {id:'veg',  name:'Λαχανικά & Φρούτα', hint:'τουλάχιστον 1'},
+  {id:'prot', name:'Πρωτεΐνη', hint:'τουλάχιστον 1'},
+  {id:'extra',name:'Έξτρα & Τραγανά', hint:'προαιρετικά'},
+  {id:'dress',name:'Ντρέσινγκ', hint:'ακριβώς 1'}
+];
+// season: 'in' (εποχής), 'off' (εκτός εποχής), 'pan' (παντρί/όλο τον χρόνο)
+const ING = [
+ // ΒΑΣΗ
+ {id:'glistrida',cat:'base',nm:'Γλιστρίδα',org:'Κύπρος · εποχής',km:20,w:4,c:15,a:3,s:'in'},
+ {id:'vlita',cat:'base',nm:'Βλίτα',org:'Κύπρος · εποχής',km:25,w:8,c:18,a:3,s:'in'},
+ {id:'iceberg',cat:'base',nm:'Μαρούλι παγόβουνο',org:'Κύπρος · εκτός εποχής',km:30,w:18,c:30,a:3,s:'off'},
+ {id:'lollo',cat:'base',nm:'Μαρούλι λόλα',org:'Κύπρος · εκτός εποχής',km:30,w:15,c:28,a:3,s:'off'},
+ {id:'roka',cat:'base',nm:'Ρόκα',org:'Κύπρος · θερμοκήπιο',km:30,w:14,c:32,a:4,s:'off'},
+ {id:'spanaki',cat:'base',nm:'Σπανάχι',org:'Ολλανδία',km:3200,w:12,c:48,a:3,s:'off'},
+ {id:'babyleaves',cat:'base',nm:'Baby leaves μείγμα',org:'Ιταλία · συσκευασμένο',km:2400,w:13,c:55,a:4,s:'off'},
+ {id:'lahano',cat:'base',nm:'Λάχανο λευκό',org:'Ελλάδα · αποθηκευμένο',km:950,w:10,c:30,a:2,s:'off'},
+ // ΛΑΧΑΝΙΚΑ & ΦΡΟΥΤΑ
+ {id:'ntomata',cat:'veg',nm:'Ντομάτα',org:'Κύπρος · full εποχής',km:25,w:11,c:35,a:5,s:'in'},
+ {id:'aggouri',cat:'veg',nm:'Αγγούρι',org:'Κύπρος · εποχής',km:20,w:17,c:20,a:4,s:'in'},
+ {id:'piperia',cat:'veg',nm:'Πιπεριά',org:'Κύπρος · εποχής',km:25,w:12,c:35,a:4,s:'in'},
+ {id:'kremmidi',cat:'veg',nm:'Κρεμμύδι κόκκινο',org:'Κύπρος',km:25,w:7,c:15,a:4,s:'in'},
+ {id:'kolokithaki',cat:'veg',nm:'Κολοκυθάκι ψητό',org:'Κύπρος · εποχής',km:25,w:10,c:25,a:3,s:'in'},
+ {id:'karpouzi',cat:'veg',nm:'Καρπούζι',org:'Κύπρος · peak εποχής',km:25,w:12,c:12,a:5,s:'in'},
+ {id:'sika',cat:'veg',nm:'Σύκα',org:'Κύπρος · μόλις ξεκινούν',km:30,w:9,c:14,a:4,s:'in'},
+ {id:'kalampoki',cat:'veg',nm:'Καλαμπόκι',org:'Κύπρος · εποχής',km:30,w:48,c:30,a:3,s:'in'},
+ {id:'pantzari',cat:'veg',nm:'Παντζάρι',org:'Κύπρος · ψυγείο',km:30,w:15,c:28,a:3,s:'off'},
+ {id:'avocado',cat:'veg',nm:'Αβοκάντο',org:'Περού · εισαγωγής',km:11000,w:65,c:135,a:5,s:'off'},
+ {id:'rodi',cat:'veg',nm:'Ρόδι',org:'εισαγωγής · έρχεται τέλη Αυγούστου',km:6000,w:40,c:60,a:4,s:'off'},
+ {id:'agkinara',cat:'veg',nm:'Αγκινάρα σε λάδι',org:'Ιταλία',km:2300,w:20,c:70,a:3,s:'off'},
+ // ΠΡΩΤΕΪΝΗ
+ {id:'halloumi',cat:'prot',nm:'Χαλλούμι σχάρας',org:'Κύπρος',km:15,w:300,c:600,a:5,s:'pan'},
+ {id:'anari',cat:'prot',nm:'Αναρή φρέσκια',org:'Κύπρος',km:15,w:90,c:180,a:3,s:'pan'},
+ {id:'feta',cat:'prot',nm:'Φέτα ΠΟΠ',org:'Ελλάδα',km:950,w:290,c:580,a:4,s:'pan'},
+ {id:'kotopoulo',cat:'prot',nm:'Κοτόπουλο σχάρας',org:'Κύπρος',km:20,w:240,c:360,a:4,s:'pan'},
+ {id:'avgo',cat:'prot',nm:'Αυγό βραστό',org:'Κύπρος',km:20,w:160,c:200,a:3,s:'pan'},
+ {id:'tonos',cat:'prot',nm:'Τόνος κονσέρβα',org:'Ισπανία',km:3500,w:5,c:400,a:4,s:'pan'},
+ {id:'louvi',cat:'prot',nm:'Λουβί',org:'Κύπρος · εποχής',km:25,w:45,c:50,a:3,s:'in'},
+ {id:'revithia',cat:'prot',nm:'Ρεβίθια',org:'Ελλάδα/Τουρκία',km:1000,w:55,c:60,a:3,s:'pan'},
+ // ΕΞΤΡΑ
+ {id:'elies',cat:'extra',nm:'Ελιές τσακιστές',org:'Κύπρος · ξηρικές',km:25,w:6,c:15,a:4,s:'pan'},
+ {id:'kapari',cat:'extra',nm:'Κάπαρη',org:'Κύπρος · αυτοφυής',km:20,w:1,c:5,a:3,s:'in'},
+ {id:'amigdala',cat:'extra',nm:'Αμύγδαλα',org:'Κύπρος',km:30,w:150,c:25,a:4,s:'pan'},
+ {id:'karidia',cat:'extra',nm:'Καρύδια',org:'εισαγωγής',km:3000,w:100,c:45,a:4,s:'pan'},
+ {id:'kinoa',cat:'extra',nm:'Κινόα',org:'Περού',km:12000,w:40,c:55,a:3,s:'pan'},
+ {id:'liasti',cat:'extra',nm:'Λιαστή ντομάτα',org:'Ιταλία',km:2300,w:15,c:45,a:4,s:'pan'},
+ {id:'krouton',cat:'extra',nm:'Κρουτόν',org:'τοπικός φούρνος',km:10,w:10,c:30,a:3,s:'pan'},
+ {id:'kolokithosporoi',cat:'extra',nm:'Σπόροι κολοκύθας',org:'Κίνα',km:8000,w:25,c:40,a:3,s:'pan'},
+ // ΝΤΡΕΣΙΝΓΚ
+ {id:'ladolemono',cat:'dress',nm:'Ελαιόλαδο + λεμόνι',org:'Κύπρος',km:30,w:15,c:45,a:5,s:'pan'},
+ {id:'haroupomelo',cat:'dress',nm:'Χαρουπόμελο vinaigrette',org:'Κύπρος · ξηρικό',km:30,w:3,c:25,a:4,s:'pan'},
+ {id:'xidi',cat:'dress',nm:'Ξύδι κρασιού + λάδι',org:'Κύπρος',km:40,w:12,c:40,a:3,s:'pan'},
+ {id:'balsamiko',cat:'dress',nm:'Βαλσάμικο Μόντενας',org:'Ιταλία',km:2300,w:20,c:65,a:4,s:'pan'},
+ {id:'giaourti',cat:'dress',nm:'Γιαούρτι-δυόσμος',org:'Κύπρος',km:20,w:60,c:80,a:4,s:'pan'},
+ {id:'kaisara',cat:'dress',nm:'Σως Καίσαρα',org:'επεξεργασμένη · εισαγωγής',km:2500,w:30,c:90,a:4,s:'pan'}
+];
+
+// insights: triggered by picked ids (neg = gotcha, pos = hero)
+const INSIGHTS = [
+ {id:'avocado',neg:1,t:'Το αβοκάντο σου ταξίδεψε ~11.000 χλμ από το Περού. Η Κύπρος βγάζει δικά της αβοκάντο — τον χειμώνα.'},
+ {id:'balsamiko',neg:1,t:'Το βαλσάμικο διέσχισε δύο θάλασσες για να έρθει από τη Μόντενα. Το χαρουπόμελο κάνει την ίδια δουλειά από 30 χλμ.'},
+ {id:'halloumi',neg:1,t:'Τοπικό δεν σημαίνει πάντα βιώσιμο: το χαλλούμι έχει το μεγαλύτερο αποτύπωμα του πιάτου σου. Η αναρή — υποπροϊόν του — έχει το 1/3.'},
+ {id:'iceberg',neg:1,t:'Μαρούλι τον Ιούλιο στην Κύπρο = καλλιέργεια εκτός εποχής με έξτρα πότισμα. Η γλιστρίδα ευδοκιμεί στον καύσωνα σχεδόν χωρίς νερό.'},
+ {id:'lollo',neg:1,t:'Τα μαρούλια είναι φυτά του χειμώνα — τον Ιούλιο θέλουν πολύ έξτρα νερό. Δοκίμασε γλιστρίδα ή βλίτα.'},
+ {id:'kinoa',neg:1,t:'Η κινόα ήρθε από 12.000 χλμ. Το λουβί είναι ο τοπικός ήρωας πρωτεΐνης — καλοκαιρινή σοδειά Κύπρου.'},
+ {id:'rodi',neg:1,t:'Το κυπριακό ρόδι έρχεται τέλη Αυγούστου. Αυτό εδώ ταξίδεψε ή έμεινε μήνες στο ψυγείο.'},
+ {id:'spanaki',neg:1,t:'Το σπανάχι είναι χειμωνιάτικο — τον Ιούλιο έρχεται από τη Βόρεια Ευρώπη.'},
+ {id:'babyleaves',neg:1,t:'Τα συσκευασμένα baby leaves ήρθαν 2.400 χλμ με ψυκτική αλυσίδα — από χωράφι της Ιταλίας.'},
+ {id:'amigdala',neg:1,t:'Τα αμύγδαλα είναι ντόπια αλλά διψασμένα: ~150 λίτρα νερό η μερίδα. Σε νησί με λειψυδρία, μετράει.'},
+ {id:'karpouzi',neg:0,t:'Καρπούζι τον Ιούλιο: peak εποχής, ελάχιστο αποτύπωμα — και με χαλλούμι, το πιο κυπριακό καλοκαιρινό ταίριασμα.'},
+ {id:'kapari',neg:0,t:'Η κάπαρη είναι αυτοφυής — σχεδόν μηδενικό αποτύπωμα. Γεύση δωρεάν από το νησί.'},
+ {id:'louvi',neg:0,t:'Λουβί: καλοκαιρινή σοδειά Κύπρου, η πιο βιώσιμη πρωτεΐνη στο ταμπλό.'},
+ {id:'haroupomelo',neg:0,t:'Χαρουπόμελο: το «μαύρο χρυσάφι» της Κύπρου, από ξηρικά δέντρα — μηδενική άρδευση.'},
+ {id:'glistrida',neg:0,t:'Γλιστρίδα: το πράσινο του Ιουλίου. Ευδοκιμεί στη ζέστη με ελάχιστο νερό.'},
+ {id:'anari',neg:0,t:'Έξυπνη κίνηση: η αναρή είναι υποπροϊόν του χαλλουμιού — γεύση τυριού με το 1/3 του αποτυπώματος.'},
+ {id:'ntomata',neg:0,t:'Ντομάτα Κύπρου τον Ιούλιο: full εποχής, ανοιχτό χωράφι, ελάχιστα χιλιόμετρα.'}
+];
+
+const NAMES = {
+ jetset:{n:'Η Σαλάτα Τζετ-Σετ',t:'Πέταξε πιο πολύ κι από εσένα φέτος.'},
+ kouris:{n:'Ο Στραγγιστής του Κούρη',t:'Το φράγμα σε παρακολουθεί.'},
+ kaminada:{n:'Η Καμινάδα',t:'Γεύση: εξαιρετική. Καυσαέρια: επίσης.'},
+ smart:{n:'Το Έξυπνο Πιάτο',t:'Νόστιμο, τοπικό, εποχής. Έτσι κερδίζεται το παιχνίδι.'},
+ giagia:{n:'Το Περιβόλι της Γιαγιάς',t:'Όλα από το νησί. Η γιαγιά θα ήταν περήφανη.'},
+ monahos:{n:'Το Πιάτο του Μοναχού',t:'Βιώσιμο, ναι. Θα το παράγγελνε κανείς; Ίσως.'},
+ enohi:{n:'Η Ένοχη Απόλαυση',t:'Πεντανόστιμη. Ο πλανήτης έχει άλλη άποψη.'},
+ influencer:{n:'Ο Ινφλουένσερ',t:'Το αβοκάντο δεν λείπει ποτέ από το story.'},
+ taxidiotis:{n:'Ο Ταξιδιώτης του Χρόνου',t:'Υλικά από άλλη εποχή — κυριολεκτικά.'},
+ nerohitis:{n:'Ο Νεροχύτης',t:'Λίγο απ᾽ όλα. Κυρίως απ᾽ όλα.'},
+ minimal:{n:'Ο Μινιμαλιστής',t:'Πέντε υλικά, μηδέν φλυαρία.'},
+ fallback:{n:'Ο Ανερχόμενος Σεφ',t:'Καλή βάση. Ο δεύτερος γύρος θα δείξει.'}
+};
+
+// ---------- STATE ----------
+let nick='', round=1, sel=new Set(), r1=null, r2=null;
+
+function startGame(){
+  nick=document.getElementById('nick').value.trim();
+  if(!nick){document.getElementById('err-intro').textContent='Γράψε ένα όνομα για να ξεκινήσεις.';return;}
+  round=1; sel=new Set();
+  showBuild();
+}
+function showBuild(){
+  document.getElementById('s-intro').classList.add('hidden');
+  document.getElementById('s-result').classList.add('hidden');
+  document.getElementById('s-build').classList.remove('hidden');
+  document.getElementById('bar').classList.remove('hidden');
+  document.getElementById('build-title').textContent = round===1 ? 'Η σαλάτα του/της '+nick : 'Γύρος 2: Ξαναφτιάξ᾽ την';
+  document.getElementById('build-sub').textContent = round===1
+    ? 'Διάλεξε με τη γεύση σου. Τα σκορ κρύβονται μέχρι το τέλος.'
+    : 'Τώρα ξέρεις τι κοστίζει τι. Άλλαξε ό,τι θέλεις — ή τίποτα.';
+  renderMarket(); updateBar();
+  window.scrollTo(0,0);
+}
+function renderMarket(){
+  const m=document.getElementById('market'); m.innerHTML='';
+  CATS.forEach(c=>{
+    const h=document.createElement('div'); h.className='cat';
+    h.innerHTML=c.name+'<small>'+c.hint+'</small>'; m.appendChild(h);
+    const g=document.createElement('div'); g.className='grid';
+    ING.filter(i=>i.cat===c.id).forEach(i=>{
+      const d=document.createElement('div');
+      d.className='ing'+(sel.has(i.id)?' sel':''); d.id='card-'+i.id;
+      d.innerHTML='<div class="nm">'+i.nm+'</div><div class="org">'+i.org+'</div><div class="hats">'+'◆'.repeat(i.a)+'<span style="opacity:.25">'+'◆'.repeat(5-i.a)+'</span></div>';
+      d.onclick=()=>toggle(i);
+      g.appendChild(d);
+    });
+    m.appendChild(g);
+  });
+}
+function toggle(i){
+  const e=document.getElementById('err-build');
+  e.textContent='';
+  if(sel.has(i.id)){sel.delete(i.id);}
+  else{
+    if(i.cat==='dress'){ // only one dressing
+      ING.filter(x=>x.cat==='dress').forEach(x=>{ if(sel.has(x.id)){sel.delete(x.id);document.getElementById('card-'+x.id).classList.remove('sel');}});
+    }
+    if(sel.size>=12){e.textContent='Μέχρι 12 υλικά — κάτι πρέπει να βγει πρώτα.';return;}
+    sel.add(i.id);
+  }
+  document.getElementById('card-'+i.id).classList.toggle('sel',sel.has(i.id));
+  updateBar();
+}
+function updateBar(){ document.getElementById('cnt').textContent=sel.size; }
+function validate(){
+  const picked=[...sel].map(id=>ING.find(i=>i.id===id));
+  const need=[['base','1 βάση'],['veg','1 λαχανικό'],['prot','1 πρωτεΐνη'],['dress','1 ντρέσινγκ']];
+  for(const [c,l] of need){ if(!picked.some(i=>i.cat===c)) return 'Λείπει τουλάχιστον '+l+'.'; }
+  if(picked.length<5) return 'Τουλάχιστον 5 υλικά — είναι σαλάτα, όχι γαρνιτούρα.';
+  return null;
+}
+function score(picked){
+  const km=picked.reduce((s,i)=>s+i.km,0);
+  const w=picked.reduce((s,i)=>s+i.w,0);
+  const c=picked.reduce((s,i)=>s+i.c,0);
+  const aAvg=picked.reduce((s,i)=>s+i.a,0)/picked.length;
+  const sv={in:1,pan:.7,off:0};
+  const season=picked.reduce((s,i)=>s+sv[i.s],0)/picked.length;
+  const carbon=Math.max(0,100*(1-c/1500));
+  const water=Math.max(0,100*(1-w/800));
+  const loc=Math.max(0,100*(1-km/20000));
+  const seas=100*season;
+  const S=Math.round(.35*carbon+.30*water+.20*loc+.15*seas);
+  const A=Math.round((aAvg-1)/4*100);
+  const smart=Math.round(Math.sqrt(Math.max(1,S)*Math.max(1,A)));
+  return {km,w,c,aAvg,S,A,smart,offCount:picked.filter(i=>i.s==='off').length,picked};
+}
+function saladName(r){
+  if(r.km>=15000) return NAMES.jetset;
+  if(r.w>=450) return NAMES.kouris;
+  if(r.c>=950) return NAMES.kaminada;
+  if(r.smart>=80) return NAMES.smart;
+  if(r.picked.every(i=>i.km<=100)) return NAMES.giagia;
+  if(r.S>=85&&r.A<60) return NAMES.monahos;
+  if(r.A>=85&&r.S<45) return NAMES.enohi;
+  if(r.picked.some(i=>i.id==='avocado')) return NAMES.influencer;
+  if(r.offCount>=3) return NAMES.taxidiotis;
+  if(r.picked.length>=11) return NAMES.nerohitis;
+  if(r.picked.length===5) return NAMES.minimal;
+  return NAMES.fallback;
+}
+function fmt(n){return Math.round(n).toLocaleString('el-GR');}
+function submitSalad(){
+  const err=validate();
+  if(err){document.getElementById('err-build').textContent=err;return;}
+  const picked=[...sel].map(id=>ING.find(i=>i.id===id));
+  const r=score(picked); r.name=saladName(r);
+  if(round===1){r1=r; showReveal(r);}else{r2=r; showFinal();}
+}
+function statRow(lbl,val,pct){
+  return '<div class="mrow"><div class="t"><span>'+lbl+'</span><b>'+val+'</b></div><div class="meter"><i style="width:'+Math.min(100,pct)+'%"></i></div></div>';
+}
+function pickInsights(picked){
+  const ids=new Set(picked.map(i=>i.id));
+  const neg=INSIGHTS.filter(x=>x.neg&&ids.has(x.id));
+  const pos=INSIGHTS.filter(x=>!x.neg&&ids.has(x.id));
+  // rank neg by ingredient impact (km+c+w weighted)
+  neg.sort((a,b)=>{const ia=ING.find(i=>i.id===a.id),ib=ING.find(i=>i.id===b.id);
+    return (ib.km/100+ib.c+ib.w)-(ia.km/100+ia.c+ia.w);});
+  const out=neg.slice(0,3).map(x=>'<div class="insight">'+x.t+'</div>');
+  if(pos.length) out.push('<div class="insight good">'+pos[0].t+'</div>');
+  return out.join('');
+}
+function showReveal(r){
+  document.getElementById('s-build').classList.add('hidden');
+  document.getElementById('bar').classList.add('hidden');
+  const el=document.getElementById('s-result');
+  el.classList.remove('hidden');
+  el.innerHTML =
+   '<div class="brand">Beyond Hospitality</div>'+
+   '<div class="sub" style="margin-bottom:4px">Η σαλάτα του/της '+nick+' είναι…</div>'+
+   '<div class="saladname">'+r.name.n+'</div>'+
+   '<div class="tagline">'+r.name.t+'</div>'+
+   '<div class="stats">'+
+     '<div class="stat"><div class="v">'+fmt(r.km)+'</div><div class="l">χιλιόμετρα</div></div>'+
+     '<div class="stat"><div class="v">'+fmt(r.w)+'</div><div class="l">λίτρα νερό</div></div>'+
+     '<div class="stat"><div class="v">'+fmt(r.c)+'</div><div class="l">γρ. CO₂</div></div>'+
+   '</div>'+
+   '<div class="panel">'+
+     statRow('Βιωσιμότητα',r.S+'/100',r.S)+
+     statRow('Γευστική απήχηση',r.A+'/100',r.A)+
+   '</div>'+
+   '<div class="score"><div class="lbl">Smart Salad Score</div><div class="big">'+r.smart+'</div></div>'+
+   pickInsights(r.picked)+
+   '<div class="items">'+r.picked.map(i=>'<span>'+i.nm+'</span>').join('')+'</div>'+
+   '<button class="btn" onclick="startRound2()">Μπορείς καλύτερα; Ξαναφτιάξ᾽ την</button>'+
+   '<div style="height:10px"></div>'+
+   '<button class="btn ghost" onclick="showFinalSolo()">Μένω με αυτήν</button>';
+  window.scrollTo(0,0);
+}
+function startRound2(){ round=2; showBuild(); }
+function showFinalSolo(){ r2=r1; showFinal(true); }
+function showFinal(solo){
+  document.getElementById('s-build').classList.add('hidden');
+  document.getElementById('bar').classList.add('hidden');
+  const el=document.getElementById('s-result');
+  el.classList.remove('hidden');
+  const dKm=r1.km-r2.km, dW=r1.w-r2.w, dC=r1.c-r2.c;
+  const pct=r1.c>0?Math.round(100*dC/r1.c):0;
+  const better=r2.smart>=r1.smart;
+  let deltaHtml='';
+  if(!solo){
+    deltaHtml = dC>0
+      ? '<div class="delta"><div class="d">−'+pct+'% CO₂</div><p>Μείωσες '+fmt(dKm)+' χλμ και '+fmt(dW)+' λίτρα νερό'+(r2.A>=r1.A-5?' — χωρίς να θυσιάσεις τη γεύση.':'.')+'</p></div>'
+      : '<div class="delta" style="border-color:var(--gold)"><div class="d" style="color:var(--gold)">Τόλμη!</div><p>Ο δεύτερος γύρος βγήκε βαρύτερος. Συμβαίνει και στους καλύτερους σεφ.</p></div>';
+  }
+  el.innerHTML =
+   '<div class="brand">Beyond Hospitality</div>'+
+   '<div class="sub" style="margin-bottom:4px">Τελικό αποτέλεσμα · '+nick+'</div>'+
+   '<div class="saladname">'+r2.name.n+'</div>'+
+   '<div class="tagline">'+r2.name.t+'</div>'+
+   '<div class="score"><div class="lbl">Smart Salad Score</div><div class="big">'+r2.smart+'</div></div>'+
+   (solo?'':'<div class="vs">'+
+     '<div class="vcol'+(better?'':' win')+'"><h4>Γύρος 1 · '+r1.name.n+'</h4>'+
+       '<div class="r"><span>Χλμ</span><b>'+fmt(r1.km)+'</b></div>'+
+       '<div class="r"><span>Νερό</span><b>'+fmt(r1.w)+' L</b></div>'+
+       '<div class="r"><span>CO₂</span><b>'+fmt(r1.c)+' γρ.</b></div>'+
+       '<div class="r"><span>Score</span><b>'+r1.smart+'</b></div></div>'+
+     '<div class="vcol'+(better?' win':'')+'"><h4>Γύρος 2 · '+r2.name.n+'</h4>'+
+       '<div class="r"><span>Χλμ</span><b>'+fmt(r2.km)+'</b></div>'+
+       '<div class="r"><span>Νερό</span><b>'+fmt(r2.w)+' L</b></div>'+
+       '<div class="r"><span>CO₂</span><b>'+fmt(r2.c)+' γρ.</b></div>'+
+       '<div class="r"><span>Score</span><b>'+r2.smart+'</b></div></div>'+
+   '</div>')+
+   deltaHtml+
+   '<div class="showoff">Δείξε την οθόνη σου — ποιος έχει το ψηλότερο score στην αίθουσα;</div>'+
+   '<button class="btn ghost" onclick="location.reload()">Παίξε ξανά</button>'+
+   '<div class="foot">Beyond Hospitality · Ιούλιος, Κύπρος<br>'+
+   'Τιμές ανά μερίδα, παραγωγή + μεταφορά. Νερό = αρδευτικό (blue water).<br>'+
+   'Πηγές: Poore &amp; Nemecek 2018 · Water Footprint Network · εκπαιδευτικές προσεγγίσεις.</div>';
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
